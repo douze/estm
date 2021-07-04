@@ -10,11 +10,17 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "CompatibilityOracle",
+"language": "GDScript",
+"path": "res://scripts/compatibility_oracle.gd"
+}, {
+"base": "Reference",
 "class": "Matrix",
 "language": "GDScript",
 "path": "res://scripts/matrix.gd"
 } ]
 _global_script_class_icons={
+"CompatibilityOracle": "",
 "Matrix": ""
 }
 
