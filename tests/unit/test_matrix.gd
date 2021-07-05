@@ -2,11 +2,7 @@ extends 'res://addons/gut/test.gd'
 
 var Matrix = load('res://scripts/matrix.gd')
 
-var small_input_matrix: Array
-
-
-func before_all() -> void:
-	small_input_matrix = [
+var small_input_matrix := [
 		['L','L'],
 		['C','L'],
 		['S','C'],

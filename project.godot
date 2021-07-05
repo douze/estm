@@ -18,10 +18,22 @@ _global_script_classes=[ {
 "class": "Matrix",
 "language": "GDScript",
 "path": "res://scripts/matrix.gd"
+}, {
+"base": "Reference",
+"class": "Model",
+"language": "GDScript",
+"path": "res://scripts/model.gd"
+}, {
+"base": "Reference",
+"class": "Wavefunction",
+"language": "GDScript",
+"path": "res://scripts/wavefunction.gd"
 } ]
 _global_script_class_icons={
 "CompatibilityOracle": "",
-"Matrix": ""
+"Matrix": "",
+"Model": "",
+"Wavefunction": ""
 }
 
 [application]
