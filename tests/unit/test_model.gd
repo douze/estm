@@ -36,8 +36,8 @@ func before_each() -> void:
 
 func test_propagate() -> void:
 	model._wavefunction._coefficients[0][0].pop_back()
-	assert_eq(model._wavefunction.get_coefficients(0, 0), ['L', 'C'])
+	assert_eq(model._wavefunction.get_coefficients(Vector2(0, 0)), ['L', 'C'])
 	
-	model._propagate(0, 0)
-	assert_eq(model._wavefunction.get_coefficients(1, 0), ['L'])
-	assert_eq(model._wavefunction.get_coefficients(1, 1), ['L', 'C'])
+	model._propagate(Vector2(0, 0))
+	assert_eq(model._wavefunction.get_coefficients(Vector2(1, 0)), ['L'])
+	assert_eq(model._wavefunction.get_coefficients(Vector2(1, 1)), ['L', 'C'])

@@ -23,9 +23,9 @@ func _initialize_coefficients() -> void:
 		_coefficients.append(row)
 
 
-# Return the coefficient list at (x,y) position
-func get_coefficients(x: int, y: int) -> Array:
-	return _coefficients[y][x]
+# Return the coefficient list at coordinates
+func get_coefficients(coordinates: Vector2) -> Array:
+	return _coefficients[coordinates.y][coordinates.x]
 
 
 # Return true if each tile list is collapsed (ie size=1) for each coefficients
@@ -39,11 +39,11 @@ func is_fully_collapsed() -> bool:
 	return true
 
 
-# Compute the shannon entropy at (x,y) position
-func compute_shannon_entropy(x: int, y: int) -> float:
+# Compute the shannon entropy at coordinates
+func compute_shannon_entropy(coordinates: Vector2) -> float:
 	var sum_of_weights: int = 0
 	var sum_of_weight_log_weights: float = 0
-	for tile in _coefficients[y][x]:
+	for tile in get_coefficients(coordinates):
 		var weight: int = _weights[tile]
 		sum_of_weights += weight
 		sum_of_weight_log_weights += weight * log(weight)
@@ -67,9 +67,9 @@ func _get_total_occurrences(valid_weights: Dictionary) -> int:
 	return total_occurrences
 
 
-# Collapse the coefficients at (x,y) position to a single tile
-func collapse(x: int, y: int) -> void:
-	var tiles := get_coefficients(x, y)
+# Collapse the coefficients at coordinates to a single tile
+func collapse(coordinates: Vector2) -> void:
+	var tiles := get_coefficients(coordinates)
 	var valid_weights := _get_valid_weights(tiles)
 	var total_occurrences := _get_total_occurrences(valid_weights)
 	var random_weight: float = randf() * total_occurrences
@@ -80,9 +80,9 @@ func collapse(x: int, y: int) -> void:
 		if random_weight < 0:
 			chosen = key
 			break
-	_coefficients[y][x] = [chosen]
+	_coefficients[coordinates.y][coordinates.x] = [chosen]
 
 
 # Constrain the coefficients at coordinates removing forbidden tile
 func constrain(coordinates: Vector2, forbidden_tile: String) -> void:
-	get_coefficients(coordinates.x, coordinates.y).erase(forbidden_tile)
+	get_coefficients(coordinates).erase(forbidden_tile)

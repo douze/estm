@@ -6,10 +6,13 @@ var _width: int
 var _height: int
 
 
-func _init(raw_data: Array, width: int, height: int) -> void:
+func _init(raw_data: Array) -> void:
 	self._raw_data = raw_data
-	self._width = width
-	self._height = height
+	assert(_raw_data.size() > 0)
+	self._height = _raw_data.size()
+	assert(typeof(_raw_data[0]) == TYPE_ARRAY and _raw_data[0].size() > 0)
+	self._width = _raw_data[0].size()
+	assert(is_size_constant())
 
 
 # Check that all rows have the same size
@@ -35,14 +38,14 @@ func _to_string() -> String:
 	return result
 
 
-# Return the valid directions from a (x,y) position, for a (width, height) matrix
-static func get_valid_directions(x: int, y: int, width: int, height: int) -> Array:
+# Return the valid directions from a coordinates, for matrix_size
+static func get_valid_directions(coordinates: Vector2, matrix_size: Vector2) -> Array:
 	var valid_directions := []
 
-	if x > 0: valid_directions.append(Vector2(-1, 0))
-	if x < width - 1: valid_directions.append(Vector2(1, 0))
-	if y > 0: valid_directions.append(Vector2(0, -1))
-	if y < height - 1: valid_directions.append(Vector2(0, 1))
+	if coordinates.x > 0: valid_directions.append(Vector2(-1, 0))
+	if coordinates.x < matrix_size.x - 1: valid_directions.append(Vector2(1, 0))
+	if coordinates.y > 0: valid_directions.append(Vector2(0, -1))
+	if coordinates.y < matrix_size.y - 1: valid_directions.append(Vector2(0, 1))
 
 	return valid_directions
 
@@ -60,7 +63,7 @@ func parse() -> Array:
 				weights[current_tile] = 0
 			weights[current_tile] += 1
 
-			for direction in get_valid_directions(x, y, _width, _height):
+			for direction in get_valid_directions(Vector2(x, y), Vector2(_width, _height)):
 				var other_tile: String = _raw_data[y + direction[1]][x + direction[0]]
 				var record := [current_tile, direction, other_tile]
 				if !compatibilities.has(record):

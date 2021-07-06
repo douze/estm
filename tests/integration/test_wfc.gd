@@ -12,9 +12,9 @@ func test_wfc() -> void:
 		['S','C'],
 		['S','S']
 	]
-	var matrix: Matrix = Matrix.new(input, 2, 4)
+	var matrix: Matrix = Matrix.new(input)
 	if matrix.is_size_constant():
 		var parsed_result := matrix.parse()
 		var model: Model = Model.new(Vector2(4, 7), parsed_result[1], parsed_result[0])
 		model.run()
-		print(Matrix.new(model._wavefunction._coefficients, 4, 7))
+		print(Matrix.new(model._wavefunction._coefficients))

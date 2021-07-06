@@ -12,7 +12,7 @@ var matrix: Matrix
 
 
 func before_all() -> void:
-	matrix = Matrix.new(small_input_matrix, 2, 4)
+	matrix = Matrix.new(small_input_matrix)
 
 
 func test_is_size_constant() -> void:
@@ -29,15 +29,15 @@ func test_get_valid_directions() -> void:
 	var width := 2
 	var height := 4
 	
-	var directions_00 := matrix.get_valid_directions(0, 0, width, height)
+	var directions_00 := matrix.get_valid_directions(Vector2(0, 0), Vector2(width, height))
 	assert_eq(directions_00.size(), 2)
 	assert_eq(directions_00, [Vector2(1, 0), Vector2(0, 1)])
 	
-	var directions_02 := matrix.get_valid_directions(0, 2, width, height)
+	var directions_02 := matrix.get_valid_directions(Vector2(0, 2), Vector2(width, height))
 	assert_eq(directions_02.size(), 3)
 	assert_eq(directions_02, [Vector2(1, 0), Vector2(0, -1), Vector2(0, 1)])
 	
-	var directions_13 := matrix.get_valid_directions(1, 3, width, height)
+	var directions_13 := matrix.get_valid_directions(Vector2(1, 3), Vector2(width, height))
 	assert_eq(directions_13.size(), 2)
 	assert_eq(directions_13, [Vector2(-1, 0), Vector2(0, -1)])
 

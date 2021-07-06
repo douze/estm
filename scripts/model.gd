@@ -25,9 +25,8 @@ func run() -> void:
 # Perform an iteration of the wfc algorithm
 func _iterate() -> void:
 	var minimum_entropy_coordinates := _find_minimum_entropy_coordinates()
-	print("iterate on " , minimum_entropy_coordinates)
-	_wavefunction.collapse(minimum_entropy_coordinates.x, minimum_entropy_coordinates.y)
-	_propagate(minimum_entropy_coordinates.x, minimum_entropy_coordinates.y)
+	_wavefunction.collapse(minimum_entropy_coordinates)
+	_propagate(minimum_entropy_coordinates)
 
 
 # Return the coordinates of the coefficients with the minimum entropy
@@ -36,9 +35,9 @@ func _find_minimum_entropy_coordinates() -> Vector2:
 	var min_entropy_coordinates: Vector2
 	for y in _output_size.y:
 		for x in _output_size.x:
-			if _wavefunction.get_coefficients(x, y).size() == 1:
+			if _wavefunction.get_coefficients(Vector2(x, y)).size() == 1:
 				continue
-			var entropy: float = _wavefunction.compute_shannon_entropy(x, y)
+			var entropy: float = _wavefunction.compute_shannon_entropy(Vector2(x, y))
 			var entropy_plus_noise: float = entropy - (randf() / 1000) # not sure about it
 			if min_entropy == -1.0 or entropy_plus_noise < min_entropy:
 				min_entropy = entropy_plus_noise
@@ -46,15 +45,16 @@ func _find_minimum_entropy_coordinates() -> Vector2:
 	return min_entropy_coordinates
 
 
-func _propagate(x: int, y: int) -> void:
-	var stack := [ Vector2(x, y) ]
+# Propagate the wavefunction, for starting_coordinates then from restricted tiles
+func _propagate(starting_coordinates: Vector2) -> void:
+	var stack := [ starting_coordinates ]
 	
 	while stack.size() > 0:
 		var coordinates: Vector2 = stack.pop_back()
-		var tiles: Array = _wavefunction.get_coefficients(coordinates.x, coordinates.y)
-		for direction in Matrix.get_valid_directions(coordinates.x, coordinates.y, _output_size.x, _output_size.y):
+		var tiles: Array = _wavefunction.get_coefficients(coordinates)
+		for direction in Matrix.get_valid_directions(coordinates, _output_size):
 			var other_coordinates: Vector2 = coordinates + direction
-			var other_tiles := _wavefunction.get_coefficients(other_coordinates.x, other_coordinates.y).duplicate()
+			var other_tiles := _wavefunction.get_coefficients(other_coordinates).duplicate()
 			for other_tile in other_tiles:
 				var other_tile_is_valid := false
 				for current_tile in tiles:
