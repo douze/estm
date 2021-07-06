@@ -8,31 +8,41 @@ var small_input_matrix := [
 		['S','C'],
 		['S','S']
 	]
+var matrix: Matrix
+
+
+func before_all() -> void:
+	matrix = Matrix.new(small_input_matrix, 2, 4)
+
+
+func test_is_size_constant() -> void:
+	assert_true(matrix.is_size_constant())
+	matrix._raw_data[0].append('L')
+	assert_false(matrix.is_size_constant())
 
 
 func test_to_string() -> void:
-	var matrix: Matrix = Matrix.new(small_input_matrix, 2, 4)
 	assert_eq(str(matrix), "L L\nC L\nS C\nS S")
 
 
 func test_get_valid_directions() -> void:
-	var matrix: Matrix = Matrix.new(small_input_matrix, 2, 4)
+	var width := 2
+	var height := 4
 	
-	var directions_00 := matrix.get_valid_directions(0, 0)
+	var directions_00 := matrix.get_valid_directions(0, 0, width, height)
 	assert_eq(directions_00.size(), 2)
 	assert_eq(directions_00, [Vector2(1, 0), Vector2(0, 1)])
 	
-	var directions_02 := matrix.get_valid_directions(0, 2)
+	var directions_02 := matrix.get_valid_directions(0, 2, width, height)
 	assert_eq(directions_02.size(), 3)
 	assert_eq(directions_02, [Vector2(1, 0), Vector2(0, -1), Vector2(0, 1)])
 	
-	var directions_13 := matrix.get_valid_directions(1, 3)
+	var directions_13 := matrix.get_valid_directions(1, 3, width, height)
 	assert_eq(directions_13.size(), 2)
 	assert_eq(directions_13, [Vector2(-1, 0), Vector2(0, -1)])
 
 
 func test_parse() -> void:
-	var matrix: Matrix = Matrix.new(small_input_matrix, 2, 4)
 	var result := matrix.parse()
 	var compatibilities: Array = result[0]
 	var weights: Dictionary = result[1]

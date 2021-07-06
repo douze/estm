@@ -15,3 +15,4 @@ __meta__ = {
 _run_on_load = true
 _should_maximize = true
 _directory1 = "res://tests/unit"
+_directory2 = "res://tests/integration"

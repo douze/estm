@@ -16,15 +16,73 @@ func _init(size: Vector2, weights: Dictionary) -> void:
 
 # Initialize all coefficients with the list of possible tiles
 func _initialize_coefficients() -> void:
-	var possible_tiles := _weights.keys()
 	for y in _height:
 		var row := []
 		for x in _width:
-			row.append(possible_tiles)
+			row.append(_weights.keys())
 		_coefficients.append(row)
 
 
 # Return the coefficient list at (x,y) position
-func get_coefficients(x: int, y: int):
+func get_coefficients(x: int, y: int) -> Array:
 	return _coefficients[y][x]
 
+
+# Return true if each tile list is collapsed (ie size=1) for each coefficients
+func is_fully_collapsed() -> bool:
+	for y in _height:
+		var row: Array = _coefficients[y]
+		for x in _width:
+			var tiles: Array = row[x]
+			if tiles.size() > 1:
+				return false
+	return true
+
+
+# Compute the shannon entropy at (x,y) position
+func compute_shannon_entropy(x: int, y: int) -> float:
+	var sum_of_weights: int = 0
+	var sum_of_weight_log_weights: float = 0
+	for tile in _coefficients[y][x]:
+		var weight: int = _weights[tile]
+		sum_of_weights += weight
+		sum_of_weight_log_weights += weight * log(weight)
+	return log(sum_of_weights) - (sum_of_weight_log_weights / sum_of_weights)
+
+
+# Return the weights corresponding to the tiles only
+func _get_valid_weights(tiles: Array) -> Dictionary:
+	var valid_weights := {}
+	for key in _weights.keys():
+		if tiles.has(key):
+			valid_weights[key] = _weights[key]
+	return valid_weights
+
+
+# Return the sum of occurrences for the weights
+func _get_total_occurrences(valid_weights: Dictionary) -> int:
+	var total_occurrences := 0
+	for value in valid_weights.values():
+		total_occurrences += value
+	return total_occurrences
+
+
+# Collapse the coefficients at (x,y) position to a single tile
+func collapse(x: int, y: int) -> void:
+	var tiles := get_coefficients(x, y)
+	var valid_weights := _get_valid_weights(tiles)
+	var total_occurrences := _get_total_occurrences(valid_weights)
+	var random_weight: float = randf() * total_occurrences
+	
+	var chosen = null
+	for key in valid_weights:
+		random_weight -= valid_weights[key]
+		if random_weight < 0:
+			chosen = key
+			break
+	_coefficients[y][x] = [chosen]
+
+
+# Constrain the coefficients at coordinates removing forbidden tile
+func constrain(coordinates: Vector2, forbidden_tile: String) -> void:
+	get_coefficients(coordinates.x, coordinates.y).erase(forbidden_tile)
