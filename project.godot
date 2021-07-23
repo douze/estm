@@ -39,8 +39,13 @@ _global_script_class_icons={
 [application]
 
 config/name="EvenSimplerTiledModel"
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://scenes/Landing.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=800
+window/size/height=800
 
 [editor_plugins]
 
