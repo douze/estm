@@ -2,7 +2,33 @@ extends Spatial
 
 func _ready():
 	randomize()
-	_execute_wfc()
+	#_execute_wfc()
+
+var selected_mesh: int = -1
+
+func get_gridmap_coordinates() -> Vector3:
+	var mouse_position := get_viewport().get_mouse_position()
+	var ray_from: Vector3 = $CameraPivot/Camera.project_ray_origin(mouse_position)
+	var ray_to: Vector3 = ray_from + $CameraPivot/Camera.project_ray_normal(mouse_position) * 200
+	var intersection := get_world().direct_space_state.intersect_ray(ray_from, ray_to)
+	if not intersection: return Vector3.INF
+	return $GridMap.world_to_map(intersection.position)
+
+
+func get_selected_mesh() -> int:
+	var grid_coordinates = get_gridmap_coordinates()
+	if grid_coordinates == Vector3.INF: return -1
+	return $GridMap.get_cell_item(grid_coordinates.x, grid_coordinates.y, grid_coordinates.z)
+
+
+func _input(event: InputEvent):
+	if Input.is_mouse_button_pressed(BUTTON_LEFT):
+		selected_mesh = get_selected_mesh()
+	
+	if Input.is_mouse_button_pressed(BUTTON_RIGHT):
+		var grid_coordinates = get_gridmap_coordinates()
+		if grid_coordinates != Vector3.INF:
+			$GridMap.set_cell_item(grid_coordinates.x, 0, grid_coordinates.z, selected_mesh)
 
 
 func _execute_wfc() -> void:
