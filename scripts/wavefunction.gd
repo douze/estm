@@ -34,7 +34,7 @@ func is_fully_collapsed() -> bool:
 		var row: Array = _coefficients[y]
 		for x in _width:
 			var tiles: Array = row[x]
-			if tiles.size() > 1:
+			if tiles.size() != 1:
 				return false
 	return true
 
@@ -47,6 +47,8 @@ func compute_shannon_entropy(coordinates: Vector2) -> float:
 		var weight: int = _weights[tile]
 		sum_of_weights += weight
 		sum_of_weight_log_weights += weight * log(weight)
+	if sum_of_weights == 0: 
+		return 1.0
 	return log(sum_of_weights) - (sum_of_weight_log_weights / sum_of_weights)
 
 
@@ -70,6 +72,7 @@ func _get_total_occurrences(valid_weights: Dictionary) -> int:
 # Collapse the coefficients at coordinates to a single tile
 func collapse(coordinates: Vector2) -> void:
 	var tiles := get_coefficients(coordinates)
+	if tiles.empty(): return
 	var valid_weights := _get_valid_weights(tiles)
 	var total_occurrences := _get_total_occurrences(valid_weights)
 	var random_weight: float = randf() * total_occurrences
@@ -86,3 +89,4 @@ func collapse(coordinates: Vector2) -> void:
 # Constrain the coefficients at coordinates removing forbidden tile
 func constrain(coordinates: Vector2, forbidden_tile: String) -> void:
 	get_coefficients(coordinates).erase(forbidden_tile)
+

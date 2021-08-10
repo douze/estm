@@ -2,9 +2,11 @@
 extends Spatial
 
 var _mesh_to_print: int = -1
-var _support_width: int = 5
-var _support_height: int = 4
-var _input: Array
+var _pattern_size: int = 5
+var _pattern_origin: Vector2 = Vector2(-1, -10)
+var _support_width: int = 14
+var _support_height: int = 8
+var _support_origin: Vector2 = Vector2(-7, -4)
 
 
 func _ready():
@@ -42,22 +44,21 @@ func _input(event: InputEvent):
 	
 	if Input.is_key_pressed(KEY_ENTER):
 		_convert_to_input_array()
+	
+	if Input.is_key_pressed(KEY_ESCAPE):
+		get_tree().quit()
+
 
 
 # Convert the scene to the input array, needed for wfc
 func _convert_to_input_array() -> void:
-	if _input.empty(): 
-		for z in range(-_support_height, _support_height):
-			var row := []
-			for x in range(-_support_width, _support_width + 1):
-				var mesh: int =  $GridMap.get_cell_item(x, 0, z)
-				var letter: String
-				if (mesh == 0): letter = 'C'
-				if (mesh == 1): letter = 'L'
-				if (mesh == 2): letter = 'W'
-				row.append(letter)
-			_input.append(row)
-	_execute_wfc(_input)
+	var input := []
+	for y in range(_pattern_origin.y, _pattern_origin.y + _pattern_size):
+		var row := []
+		for x in range(_pattern_origin.x, _pattern_origin.x + _pattern_size):
+			row.append(str($GridMap.get_cell_item(x, 0, y)))
+		input.append(row)
+	_execute_wfc(input)
 
 
 # Execute the wfc algorithm
@@ -65,23 +66,14 @@ func _execute_wfc(input: Array) -> void:
 	var matrix: Matrix = Matrix.new(input)
 	if matrix.is_size_constant():
 		var parsed_result := matrix.parse()
-		var model: Model = Model.new(Vector2(_support_width*2+1, _support_height), parsed_result[1], parsed_result[0])
+		var model: Model = Model.new(Vector2(_support_width, _support_height), parsed_result[1], parsed_result[0])
 		model.run()
 		
-		var mesh_library = $GridMap.mesh_library
-		var coast_mesh = mesh_library.find_item_by_name("Coast")
-		var land_mesh = mesh_library.find_item_by_name("Land")
-		var water_mesh = mesh_library.find_item_by_name("Water")
-		
-		var center := Vector2(model._wavefunction._width / 2, model._wavefunction._height / 2)
-		for y in model._wavefunction._height:
-			for x in model._wavefunction._width:
-				var tile = model._wavefunction.get_coefficients(Vector2(x,y))[0]
-				if tile == 'C':
-					$GridMap.set_cell_item(x-center.x, 0, y-center.y, coast_mesh)
-				if tile == 'L':
-					$GridMap.set_cell_item(x-center.x, 0, y-center.y, land_mesh)
-				if tile == 'S':
-					$GridMap.set_cell_item(x-center.x, 0, y-center.y, water_mesh)
-
+		if not model.wavefunction.is_fully_collapsed(): return
+				
+		for y in _support_height:
+			for x in _support_width:
+				var tile: String = model.wavefunction.get_coefficients(Vector2(x,y))[0]
+				var position := Vector2(x + _support_origin.x, y + _support_origin.y)
+				$GridMap.set_cell_item(position.x, 0, position.y, int(tile))
 

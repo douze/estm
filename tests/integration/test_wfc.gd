@@ -17,4 +17,4 @@ func test_wfc() -> void:
 		var parsed_result := matrix.parse()
 		var model: Model = Model.new(Vector2(4, 7), parsed_result[1], parsed_result[0])
 		model.run()
-		print(Matrix.new(model._wavefunction._coefficients))
+		print(Matrix.new(model.wavefunction._coefficients))
