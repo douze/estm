@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Godot Engine
+        run: |
+          wget https://downloads.tuxfamily.org/godotengine/3.4/Godot_v3.4-stable_linux_headless.64.zip
+          unzip Godot_v3.4-stable_linux_headless.64.zip
+      - name: Start tests
+        run: |
+          ./Godot_v3.4-stable_linux_headless.64 -d -s --path $PWD addons/gut/gut_cmdln.gd -gdir=res://tests/unit,res://tests/integration -gexit

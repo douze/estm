@@ -2,6 +2,7 @@
 
 ![GodotEngine](https://img.shields.io/badge/-GodotEngine-grey?logo=GodotEngine)
 ![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)
+![CI](https://github.com/douze/estm/actions/workflows/continuous-integration.yml/badge.svg)
 
 **E**ven **S**impler **T**iled **M**odel is a Godot Engine port of [Robert Heaton's article](https://robertheaton.com/2018/12/17/wavefunction-collapse-algorithm/) about the [Wave Function Collapse](https://github.com/mxgmn/WaveFunctionCollapse).
 
