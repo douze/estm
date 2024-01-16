@@ -3,6 +3,7 @@
 ![GodotEngine](https://img.shields.io/badge/-GodotEngine-grey?logo=GodotEngine&logoColor=white)
 ![license](https://img.shields.io/github/license/douze/estm?color=blue&label=license)
 ![continuous integration](https://img.shields.io/github/actions/workflow/status/douze/estm/continuous-integration.yml)
+![status](https://img.shields.io/badge/status-inative-yellowgreen)
 
 **E**ven **S**impler **T**iled **M**odel is a Godot Engine port of [Robert Heaton's article](https://robertheaton.com/2018/12/17/wavefunction-collapse-algorithm/) about the [Wave Function Collapse](https://github.com/mxgmn/WaveFunctionCollapse).
 
