@@ -9,7 +9,7 @@
 
 This project is mainly used to discover Godot Engine.
 
-![Preview](images/estm.png)
+![Preview](estm.png)
 
 ## Controls
 * MB1: select a color on the top left area (tiles)
